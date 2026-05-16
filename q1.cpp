@@ -87,45 +87,7 @@ class Stack{
             m_len=o.m_len;
             o.m_stack=nullptr;
         }
-        // void resize(int &flag_enl,int &flag_redu){
-        //     if((flag_enl==0)&&(flag_redu==0)){
-        //         return;
-        //     }
-        //     else if((flag_enl==1)&&(flag_redu==1)){
-        //         std::cout<<"Error, flag enlrage and flage reduce can not be ON the same time\n";
-        //         std::cout<<"Both flags are now off\n";
-        //         flag_enl=0;
-        //         flag_redu=0;
-        //     }
-        //     else if((flag_enl==1)&&(flag_redu==0)){            
-        //         this->m_cap*=2;               
-        //         int *tmp=new int[m_cap];
-        //         if(tmp==nullptr){
-        //             std::cout<<"Error, falied to allocated memory\n";                    
-        //             exit(EXIT_FAILURE);
-        //         }
-        //         for(size_t i=0;i<m_len;i++){
-        //             tmp[i]=m_stack[i];
-        //         }
-        //         delete [] m_stack;
-        //         m_stack=tmp;
-        //         flag_enl=0;
-        //     }
-        //     else if((flag_enl==0)&&(flag_redu==1)){
-        //         int *tmp=new int[m_len];
-        //         if(tmp==nullptr){
-        //             std::cout<<"Error, falied to allocated memory\n";                    
-        //             exit(EXIT_FAILURE);
-        //         }
-        //         for(size_t i=0;i<m_len;i++){
-        //             tmp[i]=m_stack[i];
-        //         }
-        //         delete [] m_stack;
-        //         m_stack=tmp;
-        //         m_cap--;
-        //         flag_reduce=0;
-        //     }
-        // }
+        
         friend Stack operator + (Stack &o1,Stack &o2);
         Stack & operator += (Stack const &o){
             m_cap+=o.m_cap;
@@ -145,18 +107,7 @@ class Stack{
             }
             else if(m_len>=m_cap){
                 flag_enlarge=1;
-                resize(flag_enlarge,flag_reduce);
-                // m_cap*=2;
-                // int *tmp=new int[m_cap];
-                // if(tmp==nullptr){
-                //     std::cout<<"Error, falied to allocated memory\n";                    
-                //     exit(EXIT_FAILURE);
-                // }
-                // for(size_t i=0;i<m_len;i++){
-                //     tmp[i]=m_stack[i];
-                // }
-                // delete [] m_stack;
-                // m_stack=tmp;
+                resize(flag_enlarge,flag_reduce);                
             }
             m_stack[m_len]=v;
             m_len++;
@@ -170,18 +121,7 @@ class Stack{
             }
             re=m_stack[--m_len];
             flag_reduce=1;
-            resize(flag_enlarge,flag_reduce);
-            // int *tmp=new int[m_len];
-            // if(tmp==nullptr){
-            //     std::cout<<"Error, falied to allocated memory\n";                    
-            //     exit(EXIT_FAILURE);
-            // }
-            // for(size_t i=0;i<m_len;i++){
-            //     tmp[i]=m_stack[i];
-            // }
-            // delete [] m_stack;
-            // m_stack=tmp;
-            // m_cap--;
+            resize(flag_enlarge,flag_reduce);    
             return *this;
         }
         void print() const {

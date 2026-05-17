@@ -89,6 +89,10 @@ class Stack{
         }
         
         friend Stack operator + (Stack &o1,Stack &o2);
+        friend Stack operator + (Stack &&o1,Stack &o2);
+        friend Stack operator + (Stack &o1,Stack &&o2);
+        friend Stack operator + (Stack &&o1,Stack &&o2);
+
         Stack & operator += (Stack const &o){
             m_cap+=o.m_cap;
             size_t idx_to_start=m_len;
@@ -125,14 +129,20 @@ class Stack{
             return *this;
         }
         void print() const {
-            std::cout<<"print id: "<<this<<'\n';
-            if(m_len==0){
-                std::cout<<"Array is empty";
+            //prevents case of dangling pointer/reference
+            if(this->m_stack!=nullptr){
+                std::cout<<"print id: "<<this<<'\n';
+                if(m_len==0){
+                    std::cout<<"Array is empty";
+                }
+                for(size_t i=0;i<m_len;i++){
+                    std::cout<<m_stack[i]<<' ';
+                }
+                std::cout<<'\n';
             }
-            for(size_t i=0;i<m_len;i++){
-                std::cout<<m_stack[i]<<' ';
+            else{
+                std::cout<<"Objet is null\n";
             }
-            std::cout<<'\n';
         }
 
 
@@ -151,6 +161,27 @@ Stack operator + (Stack &o1,Stack &o2){
     result.m_len=i;
     return result;
 }
+Stack operator + (Stack &&o1,Stack &o2){
+    //using in move C-tor
+   Stack result=std::move(o1);
+   result+=o2;
+   return result;
+}
+Stack operator + (Stack &o1,Stack &&o2){
+    Stack result=std::move(o2);
+    result+=o1;
+    return result;
+}
+Stack operator + (Stack &&o1,Stack &&o2){
+    if(o1.m_len>=o2.m_len){
+        Stack result=std::move(o1);
+        result+=o2;
+        return result;
+    }
+    Stack result=std::move(o2);
+    result+=o1;
+    return result;
+}
 
 int main() {
     //code
@@ -160,13 +191,11 @@ int main() {
     s1.push(12).push(56).push(15);
     Stack s2{(s1)};
     Stack s3=s1+s2;
-    std::cout<<"s1: \n";
-    s1.print();
+    Stack s4=std::move(s1)+std::move(s3);
+    std::cout<<"s4: ";
+    s4.print();
     std::cout<<"s3: \n";
-    s3.print();
-    std::cout<<"s3+s1: \n";
-    s3+=s1;
-    s3.print();
+    s3.print();    
     
     return 0;
 }
